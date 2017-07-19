@@ -1,13 +1,16 @@
 /*jshint esversion: 6 */
-
 const express = require('express');
 const router = express.Router();
 
 const words = { buzzwords: [] };
 const players = { 'score': 0 };
 
+router.getWords = function(req, res) {
+  res.json(words);
+};
+
 router.postWord = function (req, res) {
-  if (!req.body) return res.sendStatus(400);
+  if (!req.body || !req.body.buzzword || !req.body.points) return res.sendStatus(400);
   if (exists(req.body.buzzword)) return res.send({ success: 'false', message: `'${req.body.buzzword}' already exists`});
   let buzzword = req.body.buzzword;
   let points = Number(req.body.points);
@@ -30,10 +33,6 @@ router.putWord = function(req, res) {
     }
   }
   res.sendStatus(404);
-};
-
-router.getWords = function(req, res) {
-  res.json(words);
 };
 
 router.deleteBuzzword = function(req, res) {
