@@ -24,6 +24,7 @@ app.post('/buzzword', urlencodedParser, (req, res, next) => {
   let heard = false;
   let buzzObj = words.buzzwords;
   buzzObj.push({ buzzword, points, heard });
+  res.send({ success: true });
   next();
 });
 
@@ -41,7 +42,6 @@ app.put('/buzzword', urlencodedParser, (req, res, next) => {
 app.delete('/buzzword', urlencodedParser, (req, res, next) => {
   if (!req.body) return res.sendStatus(400);
   let del = deleteBuzzword(req.body.buzzword);
-  console.log(del);
   if (del !== false){
     res.send( { 'success': true } );
   } else {
@@ -49,6 +49,13 @@ app.delete('/buzzword', urlencodedParser, (req, res, next) => {
   }
   next();
 });
+
+app.post('/reset', (req, res, next) => {
+  words.buzzwords = [];
+  res.send({ reset: true });
+  next();
+});
+
 
 app.listen(9000);
 
@@ -65,9 +72,7 @@ function updateBuzzword( bw ) {
 }
 
 function deleteBuzzword( bw ) {
-  console.log('made it here');
   let wordArr = words.buzzwords;
-  console.log('arr', wordArr);
   for (var i = 0; i < wordArr.length; i++) {
     console.log(wordArr[i].buzzword);
     if (wordArr[i].buzzword === bw){
